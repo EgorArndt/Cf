@@ -61,7 +61,7 @@ const Home: Page = () => {
   useEffect(() => resetFilters(), [])
 
   return (
-    <Main palette='secondary' column gap='1rem' spacing={{ pt: 2 }}>
+    <Main palette='secondary' column gap='1rem' spacing={ isXs ? {pt: 2} : {pt: 2, pl: 4} } style={{minHeight: '100%'}}>
       <Box align={isS && 'space-between'} column={!isS} gap='1rem'>
         <Typography title color='info'>
           Watchlist Name
@@ -97,7 +97,7 @@ const Home: Page = () => {
         </Box>
       </Box>
       {isFilterPanelOpen && (
-        <GridGroup itemSize={!isXs && { min: 150, max: 250 }}  gap={10} wrap>
+        <GridGroup itemSize={!isXs && { min: 150, max: 250 }}  gap={10}>
           {filters.map(({ id, label, options }) => (
             <NewsFilter
               onChange={onFilterChange}

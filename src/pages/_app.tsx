@@ -1,4 +1,4 @@
-import { AppContext, AppInitialProps, MyAppProps, GetLayout } from 'next/app'
+import { AppContext, AppInitialProps, MyAppProps } from 'next/app'
 import type { NextComponentType } from 'next'
 
 import { Header } from '@layouts/base'
