@@ -3,17 +3,19 @@ import { useState, useEffect } from 'react'
 import { omit } from 'lodash-es'
 
 import type { Page } from 'next/app'
-import { NewsFilter, NewsWrapper, FiltersButton } from '@views/home'
+import { NewsFilter, NewsWrapper } from '@views/home'
 import { FormattedStory, RawStory } from '@views/home/models'
-import { Box, Typography, Button, Icon } from '@ui'
+import { GridGroup, Typography, Box, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
 import { filters, mappedFilterOptions } from 'constants/filters'
 import { Main } from '@layouts/base'
 import { useApi } from '@hooks'
+import { utilityClasses } from '@theme/constants'
 
 const Home: Page = () => {
   const [stories, setStories] = useState([] as [] | Array<FormattedStory>)
   const [userFilters, setUserFilters] = useState({})
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false)
   const { loading, data, error } = useApi({
     url,
     params: omit(userFilters, 'autorefresh'),
@@ -63,18 +65,31 @@ const Home: Page = () => {
         Watchlist Name
       </Typography>
       <Box gap='1rem'>
-        <Button
-          onClick={reload}
-          size='m'
-          palette='primary'
-          border
-          before={
-            <Icon color='info' i={<i className='fa-solid fa-rotate-right' />} />
-          }
-        >
-          Refresh
-        </Button>
-        <FiltersButton onReset={resetFilters}>
+        {[
+          { txt: 'Refresh', i: 'fa-solid fa-rotate-right', onClick: reload },
+          {
+            txt: 'Filters',
+            i: 'fa-solid fa-filter',
+            onClick: () => setIsFilterPanelOpen(!isFilterPanelOpen),
+            className: isFilterPanelOpen && utilityClasses.active,
+          },
+        ].map(({ txt, i, onClick, className }) => (
+          <Button
+            key={txt}
+            onClick={onClick}
+            size='m'
+            palette='primary'
+            border
+            align='left'
+            className={className}
+            before={<Icon color='info' i={<i className={i} />} />}
+          >
+            {txt}
+          </Button>
+        ))}
+      </Box>
+      {isFilterPanelOpen && (
+        <GridGroup itemSize={{ min: 150, max: 250 }} gap={10} wrap>
           {filters.map(({ id, label, options }) => (
             <NewsFilter
               onChange={onFilterChange}
@@ -86,8 +101,15 @@ const Home: Page = () => {
               options={options}
             />
           ))}
-        </FiltersButton>
-      </Box>
+          <Button
+            palette='info'
+            style={{ textTransform: 'uppercase' }}
+            onClick={resetFilters}
+          >
+            Reset
+          </Button>
+        </GridGroup>
+      )}
       <NewsWrapper stories={stories} loading={loading} error={error} />
     </Main>
   )

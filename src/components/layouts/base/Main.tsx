@@ -13,7 +13,7 @@ const Main: FC<BoxProps> = ({ children, ...props }: BoxProps) => (
   <Box as='main' id={mainId} style={{ position: 'relative' }} {...props}>
     {children}
     <style jsx global>{`
-      #${mainId} > * {
+      #${mainId} {
         padding-inline: ${mainInlineSpacing};
       }
     `}</style>
