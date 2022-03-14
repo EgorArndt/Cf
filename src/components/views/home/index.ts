@@ -1,5 +1,4 @@
-export { default as CheckboxFilter } from './CheckboxFilter'
+export { default as NewsFilter } from './NewsFilter'
 export { default as Story } from './Story'
 export { default as NewsWrapper } from './NewsWrapper'
-
-export type { StoryProps } from './Story'
+export { default as FiltersButton } from './FiltersButton'

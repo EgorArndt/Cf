@@ -3,10 +3,9 @@ import { useState, useEffect } from 'react'
 import { omit } from 'lodash-es'
 
 import type { Page } from 'next/app'
-import { CheckboxFilter, NewsWrapper } from '@views/home'
+import { NewsFilter, NewsWrapper, FiltersButton } from '@views/home'
 import { FormattedStory, RawStory } from '@views/home/models'
-import { Box, Typography, Button, GridGroup, Menu, MenuButton, Icon } from '@ui'
-import { utilityClasses } from '@theme/constants'
+import { Box, Typography, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
 import { filters, mappedFilterOptions } from 'constants/filters'
 import { Main } from '@layouts/base'
@@ -22,12 +21,13 @@ const Home: Page = () => {
   })
   const { reload } = useRouter()
 
-  const onFilterChange = (id: string, value: string) => {
+  const onFilterChange = (id: string, value: string) =>
     setUserFilters({ ...userFilters, [id]: mappedFilterOptions[id][value] })
-  }
 
-  const formatData = (data: {stories: Array<RawStory>}): Array<FormattedStory> => 
-    (data.stories.map((story: RawStory) => ({
+  const formatData = (data: {
+    stories: Array<RawStory>
+  }): Array<FormattedStory> =>
+    data.stories.map((story: RawStory) => ({
       imgUrl: story.imageUrls ? story.imageUrls[0] : '',
       title: story.title,
       domainName: story.domain_name,
@@ -37,13 +37,9 @@ const Home: Page = () => {
       url: story.url,
       domainHost: story.domain_host,
       description: story.description,
-    })))
+    }))
 
-  useEffect(() => {
-    if (data) setStories(formatData(data))
-  }, [userFilters, data])
-
-  useEffect(() => {
+  const resetFilters = () => {
     let defaultFilters = {}
     filters.forEach(
       ({ id, defaultValue }) =>
@@ -53,15 +49,16 @@ const Home: Page = () => {
         })
     )
     setUserFilters(defaultFilters)
-  }, [])
+  }
+
+  useEffect(() => {
+    if (data) setStories(formatData(data))
+  }, [userFilters, data])
+
+  useEffect(() => resetFilters(), [])
 
   return (
-    <Main
-      palette='secondary'
-      spacing={{ pl: 3, pt: 2, pr: 2 }}
-      column
-      gap='1rem'
-    >
+    <Main palette='secondary' column gap='1rem' spacing={{ pt: 2 }}>
       <Typography title color='info'>
         Watchlist Name
       </Typography>
@@ -77,40 +74,19 @@ const Home: Page = () => {
         >
           Refresh
         </Button>
-        <Menu
-          transition
-          arrow
-          palette='tertiary'
-          width='80%'
-          menuButton={({ open }) => (
-            <MenuButton
-              palette='primary'
-              className={open && utilityClasses.active}
-              border
-              before={
-                <Icon color='info' i={<i className='fa-solid fa-filter' />} />
-              }
-            >
-              Filters
-            </MenuButton>
-          )}
-        >
-          <GridGroup itemSize={{ min: 150 }} spacing={{ p: 1 }} gap={10} wrap>
-            {filters.map(({ id, label, options, defaultValue }) => (
-              <CheckboxFilter
-                onChange={onFilterChange}
-                key={id}
-                defaultValue={defaultValue}
-                id={id}
-                label={label}
-                options={options}
-              />
-            ))}
-            <Button palette='info' style={{ textTransform: 'uppercase' }}>
-              Reset
-            </Button>
-          </GridGroup>
-        </Menu>
+        <FiltersButton onReset={resetFilters}>
+          {filters.map(({ id, label, options }) => (
+            <NewsFilter
+              onChange={onFilterChange}
+              key={id}
+              mappedFilterOptions={mappedFilterOptions}
+              currentValue={userFilters[id]}
+              id={id}
+              label={label}
+              options={options}
+            />
+          ))}
+        </FiltersButton>
       </Box>
       <NewsWrapper stories={stories} loading={loading} error={error} />
     </Main>

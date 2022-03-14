@@ -1,4 +1,4 @@
-import { useState, FC, ChangeEvent } from 'react'
+import { FC, ChangeEvent } from 'react'
 import { capitalize } from 'lodash-es'
 
 import {
@@ -12,35 +12,30 @@ import {
   Checkbox,
 } from '@ui'
 import { ArrowLeft } from '@icons'
+import { flipObject } from '@utils'
 
-type CheckboxFilterProps = {
+type NewsFilterProps = {
   id: string
   label: string
   options: string[]
-  defaultValue?: string
+  mappedFilterOptions: any
+  currentValue: string
   onChange: (id: string, value: string) => void
 }
 
-const CheckboxFilter: FC<CheckboxFilterProps> = ({
+const NewsFilter: FC<NewsFilterProps> = ({
   id,
-  defaultValue,
+  mappedFilterOptions,
+  currentValue,
   options,
   onChange,
   label,
-}: CheckboxFilterProps) => {
-  const [filterValue, setFilterValue] = useState(defaultValue)
-
+}: NewsFilterProps) => {
   const onFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
     const el = e.target,
       val = el.value
-    onChange(el.getAttribute('data-filter'), val)
-    setFilterValue(val)
-
-    document.querySelectorAll(`[data-filter=${id}]`).forEach((checkbox) => {
-      if (el !== checkbox) checkbox.checked = false
-    })
+    onChange(el.getAttribute('data-filter') as string, val)
   }
-
   return (
     <Box>
       <Menu
@@ -55,7 +50,9 @@ const CheckboxFilter: FC<CheckboxFilterProps> = ({
               fullSize
               fontSize='body1'
             >
-              <Typography bold>{capitalize(filterValue)}</Typography>
+              <Typography bold>
+                {capitalize(flipObject(mappedFilterOptions[id])[currentValue])}
+              </Typography>
               <Typography color='tertiary' uppercase>
                 {label}
               </Typography>
@@ -91,7 +88,7 @@ const CheckboxFilter: FC<CheckboxFilterProps> = ({
             <MenuItem key={opt} width='100%' palette='inherit' align='left'>
               <Label id={id} gap='1rem' width='100%' height='100%'>
                 <Checkbox
-                  checked={filterValue === opt}
+                  checked={mappedFilterOptions[id][opt] === currentValue}
                   value={opt}
                   onChange={(e) => onFilterChange(e)}
                   data-filter={id}
@@ -106,4 +103,4 @@ const CheckboxFilter: FC<CheckboxFilterProps> = ({
   )
 }
 
-export default CheckboxFilter
+export default NewsFilter

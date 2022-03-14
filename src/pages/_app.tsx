@@ -1,7 +1,7 @@
 import { AppContext, AppInitialProps, MyAppProps, GetLayout } from 'next/app'
 import type { NextComponentType } from 'next'
 
-import Header from '@layouts/Header'
+import { Header } from '@layouts/base'
 import GlobalStyles from 'styles/global'
 import Theme from 'styles/theme'
 import 'components/ui/menu/menu.css'
