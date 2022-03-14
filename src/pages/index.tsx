@@ -9,7 +9,7 @@ import { GridGroup, Typography, Box, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
 import { filters, mappedFilterOptions } from 'constants/filters'
 import { Main } from '@layouts/base'
-import { useApi } from '@hooks'
+import { useApi, useBreakpoints } from '@hooks'
 import { utilityClasses } from '@theme/constants'
 
 const Home: Page = () => {
@@ -22,6 +22,7 @@ const Home: Page = () => {
     refreshInterval: userFilters?.autorefresh,
   })
   const { reload } = useRouter()
+  const { isXs, isS, isM } = useBreakpoints()
 
   const onFilterChange = (id: string, value: string) =>
     setUserFilters({ ...userFilters, [id]: mappedFilterOptions[id][value] })
@@ -61,35 +62,42 @@ const Home: Page = () => {
 
   return (
     <Main palette='secondary' column gap='1rem' spacing={{ pt: 2 }}>
-      <Typography title color='info'>
-        Watchlist Name
-      </Typography>
-      <Box gap='1rem'>
-        {[
-          { txt: 'Refresh', i: 'fa-solid fa-rotate-right', onClick: reload },
-          {
-            txt: 'Filters',
-            i: 'fa-solid fa-filter',
-            onClick: () => setIsFilterPanelOpen(!isFilterPanelOpen),
-            className: isFilterPanelOpen && utilityClasses.active,
-          },
-        ].map(({ txt, i, onClick, className }) => (
-          <Button
-            key={txt}
-            onClick={onClick}
-            size='m'
-            palette='primary'
-            border
-            align='left'
-            className={className}
-            before={<Icon color='info' i={<i className={i} />} />}
-          >
-            {txt}
-          </Button>
-        ))}
+      <Box align={isS && 'space-between'} column={!isS} gap='1rem'>
+        <Typography title color='info'>
+          Watchlist Name
+        </Typography>
+        <Box gap='1rem'>
+          {[
+            {
+              txt: isM ? 'Refresh' : '',
+              i: 'fa-solid fa-rotate-right',
+              onClick: reload,
+            },
+            {
+              txt: isXs ? '' : 'Filters',
+              i: 'fa-solid fa-filter',
+              onClick: () => setIsFilterPanelOpen(!isFilterPanelOpen),
+              className: isFilterPanelOpen && utilityClasses.active,
+            },
+          ].map(({ txt, i, onClick, className }) => (
+            <Button
+              key={txt}
+              onClick={onClick}
+              size='m'
+              palette='primary'
+              border
+              align='left'
+              className={className}
+              gap={10}
+            >
+              <Icon color='info' i={<i className={i} />} />
+              {txt}
+            </Button>
+          ))}
+        </Box>
       </Box>
       {isFilterPanelOpen && (
-        <GridGroup itemSize={{ min: 150, max: 250 }} gap={10} wrap>
+        <GridGroup itemSize={!isXs && { min: 150, max: 250 }}  gap={10} wrap>
           {filters.map(({ id, label, options }) => (
             <NewsFilter
               onChange={onFilterChange}

@@ -50,9 +50,9 @@ export const System: AppTheme = {
   },
   readonly: {
     breakpoints: {
-      xs: '(max-width: 320px)',
-      s: '(max-width: 768px)',
-      m: '(max-width: 1366px)',
+      xs: '(min-width: 320px) and (max-width: 766px)',
+      s: '(min-width: 768px) and (max-width: 1365px)',
+      m: '(min-width: 1366px)',
     },
     zIndex: {
       modal: 10002,

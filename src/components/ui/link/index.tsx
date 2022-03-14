@@ -33,10 +33,10 @@ const _Link: FC<LinkProps> = ({
     prefetch={prefetch}
     locale={locale}
   >
-    <ButtonBase as='a' uiKey='link' {...props} />
+    <ButtonBase as='a' {...props} />
   </NextLink>
 )
 
-const Link = withStyles<EnhancedLinkProps>(_Link, 'link')
+const Link = withStyles<EnhancedLinkProps>(_Link)
 
 export default Link

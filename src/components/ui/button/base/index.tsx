@@ -28,7 +28,7 @@ export type ButtonBaseProps = {
   styleOnActive?: CSSProperties | false
   paletteOnActive?: keyof PaletteProps | false
   variantOnActive?: Variant | false
-  colorOnHover:
+  colorOnHover?:
     | keyof AppTheme['mutatable']['textColors']
     | keyof AppTheme['readonly']['commonColors']
     | false
