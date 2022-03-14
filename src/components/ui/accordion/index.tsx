@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react'
 
 import { Box } from '@ui'
 import { ArrowLeft as ArrowDown } from '@icons'
-import accordion from './styles.module.css'
+import accordion from './styles.module.scss'
 
 type AccordionProps = {
   label?: string | ReactNode

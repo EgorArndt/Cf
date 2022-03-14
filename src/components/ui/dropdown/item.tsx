@@ -1,4 +1,4 @@
-import { FC, ComponentType } from 'react'
+import { FC } from 'react'
 import { applyStatics, MenuItem as MI } from '@szhsin/react-menu'
 
 import { MenuItem, MenuItemProps } from '@ui'
