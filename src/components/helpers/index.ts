@@ -1,5 +1,5 @@
 export { default as Avatar } from './Avatar'
-export { default as BottomIcon } from './BottomIcon'
+export { default as RotatingArrow } from './RotatingArrow'
 export { default as TotalLine } from './Avatar'
 export { default as UserMenu } from './UserMenu'
 export { default as Logo } from './Logo'

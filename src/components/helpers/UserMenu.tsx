@@ -1,15 +1,13 @@
 import { FC, ReactNode, Fragment } from 'react'
 
 import { Menu, MenuItem, MenuButton, Divider } from '@ui'
-import { ArrowLeft } from '@icons'
-import { Avatar } from 'components/helpers'
+import { Avatar, RotatingArrow } from 'components/helpers'
 
 type UserMenu = {
-  trigger?: ReactNode
   items?: ReactNode[]
 }
 
-const UserMenu: FC<UserMenu> = ({ trigger, items }: UserMenu) => {
+const UserMenu: FC<UserMenu> = ({ items }: UserMenu) => {
   const stubbyMenuItems = [
     'Some menu item',
     'One more item',
@@ -24,26 +22,14 @@ const UserMenu: FC<UserMenu> = ({ trigger, items }: UserMenu) => {
       boxShadow
       transition
       palette='primary'
-      border
       spacing={{ pt: 0.5 }}
       fontSize='body1'
       menuButton={({ open }) => (
         <MenuButton
           palette='inherit'
           variant='ghost'
-          iSize={6}
-          after={
-            trigger ? (
-              trigger
-            ) : (
-              <ArrowLeft
-                style={{
-                  transform: `rotate(${open ? 90 : -90}deg)`,
-                  transition: 'ease 0.3s',
-                }}
-              />
-            )
-          }
+          iSize={10}
+          after={<RotatingArrow isUp={open} />}
         >
           <Avatar />
         </MenuButton>

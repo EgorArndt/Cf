@@ -1,9 +1,9 @@
-import { FC, useState, useRef } from 'react'
+import { FC, useRef } from 'react'
 import { formatDistance } from 'date-fns'
 
 import { Box, Typography, Button, Link } from '@ui'
 import { Img } from 'components/helpers'
-import { useClick, useBreakpoints } from '@hooks'
+import { useClick, useBreakpoints, useToggle } from '@hooks'
 import Toggler from './Toggler'
 import { FormattedStory } from '../models'
 
@@ -18,20 +18,20 @@ const Story: FC<FormattedStory> = ({
   url,
   description,
 }: FormattedStory) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isDescOpen, toggleIsDescOpen, forceToggle] = useToggle(false)
   const storyRef = useRef(null)
   const { isXs } = useBreakpoints()
-  useClick('outside', storyRef.current, () => setIsOpen(false))
+  useClick('outside', storyRef.current, () => forceToggle(false))
 
   return (
     <Box column border palette='primary' componentRef={storyRef}>
       <Box>
         <Img
           height='100%'
-          width={isXs ? 60 : 100}
+          width={isXs ? 50 : 150}
           src={imgUrl}
           alt={domainName}
-          style={{ marginRight: 'auto', maxHeight: 80 }}
+          style={{ marginRight: 'auto', maxHeight: isXs ? 80 : '100%'}}
         />
         <Box height='100%' width='100%' column={isXs}>
           <Box
@@ -48,7 +48,7 @@ const Story: FC<FormattedStory> = ({
               >
                 {title}
               </Link>
-              {isOpen && <Box width='80%'>{description}</Box>}
+              {isDescOpen && <Box width='80%'>{description}</Box>}
               <Box align={isXs ?  'left' : [null, 'center']} gap={!isXs&&'2rem'} color='tertiary' column={isXs}>
                 <Link
                   to={domainHost}
@@ -63,20 +63,19 @@ const Story: FC<FormattedStory> = ({
                 <Typography fontSize='caption'>{formatDistance(new Date(publishTime), new Date(), {addSuffix: true})}</Typography>
               </Box>
             </Box>
-            {!isXs && <Toggler score={score} cb={setIsOpen} isOpen={isOpen} />}
+            {!isXs && <Toggler score={score} cb={toggleIsDescOpen} isDescOpen={isDescOpen} />}
           </Box>
           {isXs && (
-        <Toggler
-          score={score}
-          cb={setIsOpen}
-          isOpen={isOpen}
-          align='space-between'
-        />
-      )}
+            <Toggler
+              score={score}
+              cb={toggleIsDescOpen}
+              isDescOpen={isDescOpen}
+              align='space-between'
+            />
+          )}
         </Box>
-
       </Box>
-      {isOpen && (
+      {isDescOpen && (
         <Box width='100%' borderTop gap={isXs ? 5 : '1rem'} align={isXs? 'center' :'right'}>
           {[
             { txt: 'Like', i: 'thumbs-up' },

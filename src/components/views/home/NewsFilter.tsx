@@ -11,7 +11,7 @@ import {
   Label,
   Checkbox,
 } from '@ui'
-import { ArrowLeft } from '@icons'
+import { RotatingArrow } from 'components/helpers'
 import { flipObject } from '@utils'
 
 type NewsFilterProps = {
@@ -58,14 +58,7 @@ const NewsFilter: FC<NewsFilterProps> = ({
               </Typography>
             </Box>
             <Icon
-              i={
-                <ArrowLeft
-                  style={{
-                    transform: `rotate(${open ? 90 : -90}deg)`,
-                    transition: 'ease 0.3s',
-                  }}
-                />
-              }
+              i={<RotatingArrow isUp={open} />}
               size={10}
               spacing={{ px: 1 }}
               height='100%'
