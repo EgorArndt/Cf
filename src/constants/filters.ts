@@ -1,4 +1,4 @@
-export enum filterIds {
+enum filterIds {
   autorefresh = 'autorefresh',
   order = 'order_by',
   languages = 'languages',

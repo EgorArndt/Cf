@@ -9,14 +9,13 @@ import { GridGroup, Typography, Box, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
 import { filters, mappedFilterOptions } from 'constants/filters'
 import { Main } from '@layouts/base'
-import { useApi, useBreakpoints } from '@hooks'
+import { useApi, useBreakpoints, useToggle } from '@hooks'
 import { utilityClasses } from '@theme/constants'
-import Skeleton from 'components/skeleton'
 
 const Home: Page = () => {
   const [stories, setStories] = useState([] as [] | Array<FormattedStory>)
   const [userFilters, setUserFilters] = useState({})
-  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false)
+  const [isFilterPanelOpen, toggleIsFilterPanelOpen] = useToggle(false)
   const { loading, data, error } = useApi({
     url,
     params: omit(userFilters, 'autorefresh'),
@@ -86,7 +85,7 @@ const Home: Page = () => {
             {
               txt: isXs ? '' : 'Filters',
               i: 'fa-solid fa-filter',
-              onClick: () => setIsFilterPanelOpen(!isFilterPanelOpen),
+              onClick: toggleIsFilterPanelOpen,
               className: isFilterPanelOpen && utilityClasses.active,
             },
           ].map(({ txt, i, onClick, className }) => (

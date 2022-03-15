@@ -53,9 +53,8 @@ const Story: FC<FormattedStory> = ({
               {isDescOpen && <Box width='80%'>{description}</Box>}
               <Box
                 align={isXs ? 'left' : [null, 'center']}
-                gap={!isXs && '2rem'}
+                gap='1rem'
                 color='tertiary'
-                column={isXs}
               >
                 <Link
                   to={domainHost}
@@ -63,8 +62,9 @@ const Story: FC<FormattedStory> = ({
                   variant='ghost'
                   passHref
                   gap={10}
+                  fontSize={isXs ? 'caption' : 'body1'}
                 >
-                  <Img height={25} width={25} src={logo} alt={domainName} />
+                  <Img height={15} width={15} src={logo} alt={domainName} />
                   {domainName}
                 </Link>
                 <Typography fontSize='caption'>

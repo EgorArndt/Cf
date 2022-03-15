@@ -78,8 +78,8 @@ const StoriesFilter: FC<StoriesFilterProps> = ({
             {label}
           </Typography>
           {options.map((opt) => (
-            <MenuItem key={opt} width='100%' palette='inherit' align='left'>
-              <Label id={id} gap='1rem' width='100%' height='100%'>
+            <MenuItem key={opt} width='100%' palette='inherit' align='left' spacing={{p:0}}>
+              <Label id={id} gap='1rem' width='100%' height='100%' spacing={{p: 1}}>
                 <Checkbox
                   checked={mappedFilterOptions[id][opt] === currentValue}
                   value={opt}
