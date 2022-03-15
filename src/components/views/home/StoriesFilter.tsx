@@ -14,7 +14,7 @@ import {
 import { RotatingArrow } from 'components/helpers'
 import { flipObject } from '@utils'
 
-type NewsFilterProps = {
+type StoriesFilterProps = {
   id: string
   label: string
   options: string[]
@@ -23,14 +23,14 @@ type NewsFilterProps = {
   onChange: (id: string, value: string) => void
 }
 
-const NewsFilter: FC<NewsFilterProps> = ({
+const StoriesFilter: FC<StoriesFilterProps> = ({
   id,
   mappedFilterOptions,
   currentValue,
   options,
   onChange,
   label,
-}: NewsFilterProps) => {
+}: StoriesFilterProps) => {
   const onFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
     const el = e.target,
       val = el.value
@@ -96,4 +96,4 @@ const NewsFilter: FC<NewsFilterProps> = ({
   )
 }
 
-export default NewsFilter
+export default StoriesFilter

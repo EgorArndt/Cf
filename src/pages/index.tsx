@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { omit } from 'lodash-es'
 
 import type { Page } from 'next/app'
-import { NewsFilter, Story, StorySkeleton } from '@views/home'
+import { StoriesFilter, Story, StorySkeleton } from '@views/home'
 import { FormattedStory, RawStory } from '@views/home/models'
 import { GridGroup, Typography, Box, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
@@ -109,12 +109,12 @@ const Home: Page = () => {
       {isFilterPanelOpen && (
         <GridGroup itemSize={!isXs && { min: 150, max: 250 }} gap={10}>
           {filters.map(({ id, label, options }) => (
-            <NewsFilter
-              onChange={onFilterChange}
+            <StoriesFilter
               key={id}
-              mappedFilterOptions={mappedFilterOptions}
-              currentValue={userFilters[id]}
               id={id}
+              currentValue={userFilters[id]}
+              onChange={onFilterChange}
+              mappedFilterOptions={mappedFilterOptions}
               label={label}
               options={options}
             />
@@ -129,11 +129,18 @@ const Home: Page = () => {
         </GridGroup>
       )}
       <Box column gap='1rem'>
-        {loading ? <StorySkeleton q={10} /> : 
+        {loading ? (
+          <StorySkeleton q={10} />
+        ) : error ? (
+          <Typography>
+            Sorry, your search yielded no results. Try specifying different
+            filters for your search.
+          </Typography>
+        ) : (
           stories.map(({ title, ...props }) => (
             <Story key={title} title={title} {...props} />
           ))
-        }
+        )}
       </Box>
     </Main>
   )
