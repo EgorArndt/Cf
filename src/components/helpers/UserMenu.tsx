@@ -17,8 +17,8 @@ const UserMenu: FC<UserMenu> = ({ items }: UserMenu) => {
 
   return (
     <Menu
-      offsetY={50}
-      direction='left'
+      offsetY={10}
+      offsetX={-100}
       boxShadow
       transition
       palette='primary'

@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWR, { SWRConfiguration } from 'swr'
 
 import { fetcher } from '@utils'
 
@@ -6,18 +6,16 @@ type UseApiProps = {
   url: string
   params?: URLSearchParams
   cb: () => void
-  refreshInterval: number
+  config?: SWRConfiguration
 }
 
-const useApi = ({ url, params, cb, refreshInterval }: UseApiProps) => {
+const useApi = ({ url, params, cb, config }: UseApiProps) => {
   const usp = new URLSearchParams(params)
 
   usp.sort()
   const qs = usp.toString()
   console.log(qs)
-  const { data, error } = useSWR(`${url}?${qs}`, cb || fetcher, {
-    refreshInterval,
-  })
+  const { data, error } = useSWR(`${url}?${qs}`, cb || fetcher, config)
 
   return {
     loading: !error && !data,

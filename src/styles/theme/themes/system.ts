@@ -4,7 +4,7 @@ import { setSpacing, setFontSize } from '../utils'
 export const System: AppTheme = {
   mutatable: {
     global: {
-      bg: '#fff',
+      bg: '#eee',
       bgOnHover: null,
       contrastText: '#696969',
       textOnHover: null,

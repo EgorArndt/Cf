@@ -26,13 +26,15 @@ const Story: FC<FormattedStory> = ({
   return (
     <Box column border palette='primary' componentRef={storyRef}>
       <Box>
-        <Img
-          height='100%'
-          width={isXs ? 50 : 150}
-          src={imgUrl}
-          alt={domainName}
-          style={{ marginRight: 'auto', maxHeight: isXs ? 80 : '100%'}}
-        />
+        {!isXs && (
+          <Img
+            height='100%'
+            width={150}
+            src={imgUrl}
+            alt={domainName}
+            style={{ marginRight: 'auto', maxHeight: 100 }}
+          />
+        )}
         <Box height='100%' width='100%' column={isXs}>
           <Box
             align={['space-between', 'flex-start']}
@@ -49,7 +51,12 @@ const Story: FC<FormattedStory> = ({
                 {title}
               </Link>
               {isDescOpen && <Box width='80%'>{description}</Box>}
-              <Box align={isXs ?  'left' : [null, 'center']} gap={!isXs&&'2rem'} color='tertiary' column={isXs}>
+              <Box
+                align={isXs ? 'left' : [null, 'center']}
+                gap={!isXs && '2rem'}
+                color='tertiary'
+                column={isXs}
+              >
                 <Link
                   to={domainHost}
                   palette='inherit'
@@ -60,10 +67,20 @@ const Story: FC<FormattedStory> = ({
                   <Img height={25} width={25} src={logo} alt={domainName} />
                   {domainName}
                 </Link>
-                <Typography fontSize='caption'>{formatDistance(new Date(publishTime), new Date(), {addSuffix: true})}</Typography>
+                <Typography fontSize='caption'>
+                  {formatDistance(new Date(publishTime), new Date(), {
+                    addSuffix: true,
+                  })}
+                </Typography>
               </Box>
             </Box>
-            {!isXs && <Toggler score={score} cb={toggleIsDescOpen} isDescOpen={isDescOpen} />}
+            {!isXs && (
+              <Toggler
+                score={score}
+                cb={toggleIsDescOpen}
+                isDescOpen={isDescOpen}
+              />
+            )}
           </Box>
           {isXs && (
             <Toggler
@@ -76,7 +93,12 @@ const Story: FC<FormattedStory> = ({
         </Box>
       </Box>
       {isDescOpen && (
-        <Box width='100%' borderTop gap={isXs ? 5 : '1rem'} align={isXs? 'center' :'right'}>
+        <Box
+          width='100%'
+          borderTop
+          gap={isXs ? 5 : '1rem'}
+          align={isXs ? 'center' : 'right'}
+        >
           {[
             { txt: 'Like', i: 'thumbs-up' },
             { txt: 'Dislike', i: 'thumbs-down' },

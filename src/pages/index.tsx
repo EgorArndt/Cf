@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { omit } from 'lodash-es'
 
 import type { Page } from 'next/app'
-import { NewsFilter, NewsWrapper } from '@views/home'
+import { NewsFilter, Story, StorySkeleton } from '@views/home'
 import { FormattedStory, RawStory } from '@views/home/models'
 import { GridGroup, Typography, Box, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
@@ -11,6 +11,7 @@ import { filters, mappedFilterOptions } from 'constants/filters'
 import { Main } from '@layouts/base'
 import { useApi, useBreakpoints } from '@hooks'
 import { utilityClasses } from '@theme/constants'
+import Skeleton from 'components/skeleton'
 
 const Home: Page = () => {
   const [stories, setStories] = useState([] as [] | Array<FormattedStory>)
@@ -19,7 +20,9 @@ const Home: Page = () => {
   const { loading, data, error } = useApi({
     url,
     params: omit(userFilters, 'autorefresh'),
-    refreshInterval: userFilters?.autorefresh,
+    config: {
+      refreshInterval: userFilters?.autorefresh,
+    },
   })
   const { reload } = useRouter()
   const { isXs, isS, isM } = useBreakpoints()
@@ -61,7 +64,14 @@ const Home: Page = () => {
   useEffect(() => resetFilters(), [])
 
   return (
-    <Main palette='secondary' column gap='1rem' spacing={ isXs ? {pt: 2} : {pt: 2, pl: 4} } style={{minHeight: '100%'}}>
+    <Main
+      palette='secondary'
+      column
+      gap='1rem'
+      spacing={{ pt: 2 }}
+      childrenSpacing={!isXs && { mx: 3 }}
+      width={isM ? '90%' : '100%'}
+    >
       <Box align={isS && 'space-between'} column={!isS} gap='1rem'>
         <Typography title color='info'>
           Watchlist Name
@@ -97,7 +107,7 @@ const Home: Page = () => {
         </Box>
       </Box>
       {isFilterPanelOpen && (
-        <GridGroup itemSize={!isXs && { min: 150, max: 250 }}  gap={10}>
+        <GridGroup itemSize={!isXs && { min: 150, max: 250 }} gap={10}>
           {filters.map(({ id, label, options }) => (
             <NewsFilter
               onChange={onFilterChange}
@@ -118,7 +128,13 @@ const Home: Page = () => {
           </Button>
         </GridGroup>
       )}
-      <NewsWrapper stories={stories} loading={loading} error={error} />
+      <Box column gap='1rem'>
+        {loading ? <StorySkeleton q={10} /> : 
+          stories.map(({ title, ...props }) => (
+            <Story key={title} title={title} {...props} />
+          ))
+        }
+      </Box>
     </Main>
   )
 }
