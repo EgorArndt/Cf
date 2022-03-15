@@ -12,20 +12,20 @@ import {
   Checkbox,
 } from '@ui'
 import { RotatingArrow } from 'components/helpers'
-import { flipObject } from '@utils'
+import type { MappedFilters, FilterValue } from 'hooks/useFilters'
 
 type StoriesFilterProps = {
   id: string
   label: string
   options: string[]
-  mappedFilterOptions: any
-  currentValue: string
+  mappedFilters: MappedFilters
+  currentValue: FilterValue
   onChange: (id: string, value: string) => void
 }
 
 const StoriesFilter: FC<StoriesFilterProps> = ({
   id,
-  mappedFilterOptions,
+  mappedFilters,
   currentValue,
   options,
   onChange,
@@ -50,9 +50,7 @@ const StoriesFilter: FC<StoriesFilterProps> = ({
               fullSize
               fontSize='body1'
             >
-              <Typography bold>
-                {capitalize(flipObject(mappedFilterOptions[id])[currentValue])}
-              </Typography>
+              <Typography bold>{capitalize(currentValue.unmapped)}</Typography>
               <Typography color='tertiary' uppercase>
                 {label}
               </Typography>
@@ -78,10 +76,22 @@ const StoriesFilter: FC<StoriesFilterProps> = ({
             {label}
           </Typography>
           {options.map((opt) => (
-            <MenuItem key={opt} width='100%' palette='inherit' align='left' spacing={{p:0}}>
-              <Label id={id} gap='1rem' width='100%' height='100%' spacing={{p: 1}}>
+            <MenuItem
+              key={opt}
+              width='100%'
+              palette='inherit'
+              align='left'
+              spacing={{ p: 0 }}
+            >
+              <Label
+                id={id}
+                gap='1rem'
+                width='100%'
+                height='100%'
+                spacing={{ p: 1 }}
+              >
                 <Checkbox
-                  checked={mappedFilterOptions[id][opt] === currentValue}
+                  checked={mappedFilters[id][opt] === currentValue.mapped}
                   value={opt}
                   onChange={(e) => onFilterChange(e)}
                   data-filter={id}

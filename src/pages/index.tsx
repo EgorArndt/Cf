@@ -3,31 +3,31 @@ import { useState, useEffect } from 'react'
 import { omit } from 'lodash-es'
 
 import type { Page } from 'next/app'
-import { StoriesFilter, Story, StorySkeleton } from '@views/home'
+import { FilterPanel, StoriesWrapper } from '@views/home'
 import { FormattedStory, RawStory } from '@views/home/models'
-import { GridGroup, Typography, Box, Button, Icon } from '@ui'
+import { Typography, Box, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
-import { filters, mappedFilterOptions } from 'constants/filters'
+import { filters as _filters, mappedFilterOptions } from 'constants/filters'
 import { Main } from '@layouts/base'
-import { useApi, useBreakpoints, useToggle } from '@hooks'
+import { useApi, useBreakpoints, useToggle, useFilters } from '@hooks'
 import { utilityClasses } from '@theme/constants'
 
 const Home: Page = () => {
   const [stories, setStories] = useState([] as [] | Array<FormattedStory>)
-  const [userFilters, setUserFilters] = useState({})
+  const { filters, setFilters, resetFilters, getFilterValue } = useFilters(
+    _filters,
+    mappedFilterOptions
+  )
   const [isFilterPanelOpen, toggleIsFilterPanelOpen] = useToggle(false)
   const { loading, data, error } = useApi({
     url,
-    params: omit(userFilters, 'autorefresh'),
+    params: omit(filters, 'autorefresh'),
     config: {
-      refreshInterval: userFilters?.autorefresh,
+      refreshInterval: filters.autorefresh,
     },
   })
   const { reload } = useRouter()
   const { isXs, isS, isM } = useBreakpoints()
-
-  const onFilterChange = (id: string, value: string) =>
-    setUserFilters({ ...userFilters, [id]: mappedFilterOptions[id][value] })
 
   const formatData = (data: {
     stories: Array<RawStory>
@@ -44,23 +44,9 @@ const Home: Page = () => {
       description: story.description,
     }))
 
-  const resetFilters = () => {
-    let defaultFilters = {}
-    filters.forEach(
-      ({ id, defaultValue }) =>
-        (defaultFilters = {
-          ...defaultFilters,
-          [id]: mappedFilterOptions[id][defaultValue],
-        })
-    )
-    setUserFilters(defaultFilters)
-  }
-
   useEffect(() => {
-    if (data) setStories(formatData(data))
-  }, [userFilters, data])
-
-  useEffect(() => resetFilters(), [])
+    if (data && data.stories) setStories(formatData(data))
+  }, [filters, data])
 
   return (
     <Main
@@ -106,41 +92,15 @@ const Home: Page = () => {
         </Box>
       </Box>
       {isFilterPanelOpen && (
-        <GridGroup itemSize={!isXs && { min: 150, max: 250 }} gap={10}>
-          {filters.map(({ id, label, options }) => (
-            <StoriesFilter
-              key={id}
-              id={id}
-              currentValue={userFilters[id]}
-              onChange={onFilterChange}
-              mappedFilterOptions={mappedFilterOptions}
-              label={label}
-              options={options}
-            />
-          ))}
-          <Button
-            palette='info'
-            style={{ textTransform: 'uppercase' }}
-            onClick={resetFilters}
-          >
-            Reset
-          </Button>
-        </GridGroup>
+        <FilterPanel
+          filters={_filters}
+          setFilters={setFilters}
+          mappedFilters={mappedFilterOptions}
+          resetFilters={resetFilters}
+          getFilterValue={getFilterValue}
+        />
       )}
-      <Box column gap='1rem'>
-        {loading ? (
-          <StorySkeleton q={10} />
-        ) : error ? (
-          <Typography>
-            Sorry, your search yielded no results. Try specifying different
-            filters for your search.
-          </Typography>
-        ) : (
-          stories.map(({ title, ...props }) => (
-            <Story key={title} title={title} {...props} />
-          ))
-        )}
-      </Box>
+      <StoriesWrapper stories={stories} loading={loading} error={error} />
     </Main>
   )
 }

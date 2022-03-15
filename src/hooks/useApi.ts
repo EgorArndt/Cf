@@ -1,4 +1,4 @@
-import useSWR, { SWRConfiguration } from 'swr'
+import useSWR, { mutate, SWRConfiguration } from 'swr'
 
 import { fetcher } from '@utils'
 
@@ -14,8 +14,13 @@ const useApi = ({ url, params, cb, config }: UseApiProps) => {
 
   usp.sort()
   const qs = usp.toString()
-  console.log(qs)
+
   const { data, error } = useSWR(`${url}?${qs}`, cb || fetcher, config)
+  mutate(
+    url,
+    async (data: unknown) => data,
+    false
+  )
 
   return {
     loading: !error && !data,
