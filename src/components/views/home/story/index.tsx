@@ -1,4 +1,5 @@
 import { FC, useState, useRef } from 'react'
+import { formatDistance } from 'date-fns'
 
 import { Box, Typography, Button, Link } from '@ui'
 import { Img } from 'components/helpers'
@@ -59,7 +60,7 @@ const Story: FC<FormattedStory> = ({
                   <Img height={25} width={25} src={logo} alt={domainName} />
                   {domainName}
                 </Link>
-                <Typography fontSize='caption'>1 d</Typography>
+                <Typography fontSize='caption'>{formatDistance(new Date(publishTime), new Date(), {addSuffix: true})}</Typography>
               </Box>
             </Box>
             {!isXs && <Toggler score={score} cb={setIsOpen} isOpen={isOpen} />}
