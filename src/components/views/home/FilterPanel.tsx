@@ -7,10 +7,10 @@ import type { Filter, MappedFilters, FilterValue } from 'hooks/useFilters'
 
 type FilterPanelProps = {
   filters: Array<Filter>
-  setFilters: (id: any, value: any) => void
+  setFilters: (id: Filter['id'], value: FilterValue['unmapped']) => void
   mappedFilters: MappedFilters
   resetFilters: () => void
-  getFilterValue: (id: string) => FilterValue
+  getFilterValue: (id: Filter['id']) => FilterValue
 }
 
 const FilterPanel: FC<FilterPanelProps> = ({

@@ -12,15 +12,15 @@ import {
   Checkbox,
 } from '@ui'
 import { RotatingArrow } from 'components/helpers'
-import type { MappedFilters, FilterValue } from 'hooks/useFilters'
+import type { MappedFilters, FilterValue, Filter } from 'hooks/useFilters'
 
 type StoriesFilterProps = {
-  id: string
-  label: string
-  options: string[]
+  id: Filter['id']
+  label: Filter['label']
+  options: Filter['options']
   mappedFilters: MappedFilters
   currentValue: FilterValue
-  onChange: (id: string, value: string) => void
+  onChange: (id: Filter['id'], value: FilterValue['unmapped']) => void
 }
 
 const StoriesFilter: FC<StoriesFilterProps> = ({

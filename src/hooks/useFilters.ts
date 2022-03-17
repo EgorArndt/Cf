@@ -17,13 +17,13 @@ export type Filter = {
 }
 
 export type MappedFilters = {
-  [key: Filter['id']]: { [key: OneOf<Filter['options']>]: string | number }
+  [key: Filter['id']]: { [key: OneOf<Filter['options']>]: FilterValue['mapped'] }
 }
 
 export type FilterValue = { mapped: string | number; unmapped: string }
 
 const useFilters = (filters: Array<Filter>, mappedFilters: MappedFilters) => {
-  const [_filters, _setFilters] = useState({} as {[key: Filter['id']]: string | number})
+  const [_filters, _setFilters] = useState({} as {[key: Filter['id']]: FilterValue['mapped']})
 
   const setFilters = (
     id: Filter['id'],
@@ -49,7 +49,7 @@ const useFilters = (filters: Array<Filter>, mappedFilters: MappedFilters) => {
     }),
     [_filters]
   )
-
+  
   useEffect(() => resetFilters(), [])
 
   return {
