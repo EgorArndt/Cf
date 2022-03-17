@@ -1,11 +1,12 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { get } from 'lodash-es'
 
 import { flipObject } from '@utils'
 
-type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
-  infer ElementType
+type OneOf<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
+  infer OneOf
 >
-  ? ElementType
+  ? OneOf
   : never
 
 export type Filter = {
@@ -16,17 +17,17 @@ export type Filter = {
 }
 
 export type MappedFilters = {
-  [key: Filter['id']]: { [key: ElementType<Filter['options']>]: unknown }
+  [key: Filter['id']]: { [key: OneOf<Filter['options']>]: string | number }
 }
 
 export type FilterValue = { mapped: string | number; unmapped: string }
 
 const useFilters = (filters: Array<Filter>, mappedFilters: MappedFilters) => {
-  const [_filters, _setFilters] = useState({})
+  const [_filters, _setFilters] = useState({} as {[key: Filter['id']]: string | number})
 
   const setFilters = (
     id: Filter['id'],
-    optionKey: ElementType<Filter['options']>
+    optionKey: OneOf<Filter['options']>
   ) => _setFilters({ ..._filters, [id]: mappedFilters[id][optionKey] })
 
   const resetFilters = useCallback(() => {
@@ -42,24 +43,21 @@ const useFilters = (filters: Array<Filter>, mappedFilters: MappedFilters) => {
   }, [])
 
   const getFilterValue = useCallback(
-    (id: Filter['id']) => ({
+    (id: Filter['id']): FilterValue => ({
       mapped: _filters[id],
-      unmapped: flipObject(mappedFilters[id])[_filters[id]],
+      unmapped: get(flipObject(mappedFilters[id]), `${_filters[id]}`)
     }),
     [_filters]
   )
 
   useEffect(() => resetFilters(), [])
- 
-  return useMemo(
-    () => ({
-      filters: _filters,
-      setFilters,
-      resetFilters,
-      getFilterValue,
-    }),
-    [_filters, _setFilters]
-  )
+
+  return {
+    filters: _filters,
+    setFilters,
+    resetFilters,
+    getFilterValue,
+  }
 }
 
 export default useFilters

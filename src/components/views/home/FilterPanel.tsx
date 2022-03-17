@@ -39,6 +39,7 @@ const FilterPanel: FC<FilterPanelProps> = ({
         palette='info'
         style={{ textTransform: 'uppercase' }}
         onClick={resetFilters}
+        fontSize='body2'
       >
         Reset
       </Button>

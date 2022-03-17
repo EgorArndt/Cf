@@ -4,7 +4,8 @@ import { omit } from 'lodash-es'
 
 import type { Page } from 'next/app'
 import { FilterPanel, StoriesWrapper } from '@views/home'
-import { FormattedStory, RawStory } from '@views/home/models'
+import { FormattedStory } from '@views/home/models'
+import { formatData } from '@views/home/utils/formatData'
 import { Typography, Box, Button, Icon } from '@ui'
 import { stories as url } from 'constants/api'
 import { filters as _filters, mappedFilterOptions } from 'constants/filters'
@@ -13,7 +14,7 @@ import { useApi, useBreakpoints, useToggle, useFilters } from '@hooks'
 import { utilityClasses } from '@theme/constants'
 
 const Home: Page = () => {
-  const [stories, setStories] = useState([] as [] | Array<FormattedStory>)
+  const [stories, setStories] = useState([] as Array<FormattedStory>)
   const { filters, setFilters, resetFilters, getFilterValue } = useFilters(
     _filters,
     mappedFilterOptions
@@ -23,29 +24,14 @@ const Home: Page = () => {
     url,
     params: omit(filters, 'autorefresh'),
     config: {
-      refreshInterval: filters.autorefresh,
+      refreshInterval: (filters as {autorefresh: number}).autorefresh,
     },
   })
   const { reload } = useRouter()
   const { isXs, isS, isM } = useBreakpoints()
 
-  const formatData = (data: {
-    stories: Array<RawStory>
-  }): Array<FormattedStory> =>
-    data.stories.map((story: RawStory) => ({
-      imgUrl: story.imageUrls ? story.imageUrls[0] : '',
-      title: story.title,
-      domainName: story.domain_name,
-      publishTime: story.publishTime,
-      score: story.score,
-      logo: story.domain_cached_logo_url,
-      url: story.url,
-      domainHost: story.domain_host,
-      description: story.description,
-    }))
-
   useEffect(() => {
-    if (data && data.stories) setStories(formatData(data))
+    if (data) setStories(formatData(data))
   }, [filters, data])
 
   return (

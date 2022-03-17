@@ -115,9 +115,7 @@ export const ButtonBase: FC<ButtonBaseProps> = ({
       style={{ ...style, ...styleOnActive }}
       {...props}
     >
-      {before && (
-        <Icon i={before} size={iSize} className={cn('before', iClass)} />
-      )}
+      {before && <Icon i={before} size={iSize} className={cn('before', iClass)} />}
       {children}
       {after && <Icon i={after} size={iSize} className={cn('after', iClass)} />}
     </StyledBase>
